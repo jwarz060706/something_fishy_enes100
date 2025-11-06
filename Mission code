@@ -1,3 +1,5 @@
+int switchPin = 7;
+
 //Linear Actuator
 int linAc_In1 = 2;
 int linAc_In2 = 4;
@@ -18,6 +20,7 @@ int height = 500; //this is a guess of the height from the ground to the ultraso
 void setup()
 {
   Serial.begin (9600);
+  pinMode(switchPin, INPUT_PULLUP);
   pinMode(LinAc_In4, OUTPUT);
   pinMode(LinAc_In3, OUTPUT);
   pinMode(LinAcEnable, OUTPUT);
@@ -31,6 +34,10 @@ void setup()
 
 void loop() {
 
+  while (digitalRead (switchPin) == HIGH) { //this will stop the program from running until the switch is flipped
+    delay (10);
+  }
+  
   digitalWrite(trigPin, LOW);  //runs and gives a value of the water level using the ultrasonic sensor
   delayMicroseconds(2);  
   digitalWrite(trigPin, HIGH);  
@@ -58,4 +65,3 @@ void loop() {
 
   exit (0); //stops the program
 }
-
