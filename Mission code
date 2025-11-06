@@ -1,1 +1,61 @@
+//Linear Actuator
+int linAc_In1 = 2;
+int linAc_In2 = 4;
+int linAcEnable = 5;
+int extendTime = 6500; //time to fully extend/retract actuator
+
+//Water Pump
+int pumpPin = 13;
+int pumpTime = 5000; //this is a guess. We will find a better value in testing
+  //enable 1 & 2 not needed, I think
+  
+//Ultrasonic Sensor
+int trigPin = 10;
+int echoPin = 11;
+float duration, distance, wLevel;
+int height = 500; //this is a guess of the height from the ground to the ultrasonic sensor
+
+void setup()
+{
+  Serial.begin (9600);
+  pinMode(LinAc_In4, OUTPUT);
+  pinMode(LinAc_In3, OUTPUT);
+  pinMode(LinAcEnable, OUTPUT);
+ 
+  pinMode(MissionTrigger, OUTPUT);
+  pinMode(MissionEcho, INPUT);
+  
+  pinMode(PumpIn1, OUTPUT);
+
+}
+
+void loop() {
+
+  digitalWrite(trigPin, LOW);  //runs and gives a value of the water level using the ultrasonic sensor
+  delayMicroseconds(2);  
+  digitalWrite(trigPin, HIGH);  
+  delayMicroseconds(10);  
+  digitalWrite(trigPin, LOW);  
+  duration = pulseIn(echoPin, HIGH); 
+  distance = duration * 0.1715;
+  wLevel = height - 13 - distance;
+  Serial.print ("The Water Level is: ", wLevel);
+
+  digitalWrite(linAcEnable, HIGH); //sets the speed for linear actuator
+  digitalWrite (linAc_In1, HIGH); //extends linear actuator
+  digitalWrite (linAc_In2, LOW);
+  delay (extendTime);
+  digitalWrite (linAc_In1, LOW); //turns off actuator
+  
+  digitalWrite(pumpPin, HIGH); //runs the pump
+  delay (pumpTime);
+  digitalWrite(pumpPin, LOW);
+
+  digitalWrite (linAc_In1, LOW); //retracts linear actuator
+  digitalWrite (linAc_In2, HIGH);
+  delay (extendTime);
+  digitalWrite (linAc_In2, LOW);
+
+  exit (0); //stops the program
+}
 
